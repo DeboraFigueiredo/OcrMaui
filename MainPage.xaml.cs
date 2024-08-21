@@ -105,10 +105,10 @@ namespace OcrMaui
                 {
                     ColorFilter = SKColorFilter.CreateColorMatrix(new float[]
                     {
-                        0.3f, 0.3f, 0.3f, 0, 0, // Red
-                        0.3f, 0.3f, 0.3f, 0, 0, // Green
-                        0.3f, 0.3f, 0.3f, 0, 0, // Blue
-                        0, 0, 0, 1, 0  // Alpha
+                        0.3f, 0.3f, 0.3f, 0, 0, 
+                        0.3f, 0.3f, 0.3f, 0, 0, 
+                        0.3f, 0.3f, 0.3f, 0, 0, 
+                        0, 0, 0, 1, 0 
                     })
                 };
                 canvas.DrawBitmap(bitmap, 0, 0, paint);
@@ -125,10 +125,10 @@ namespace OcrMaui
 
             var contrastMatrix = new float[]
             {
-                contrast, 0, 0, 0, 0, // Red
-                0, contrast, 0, 0, 0, // Green
-                0, 0, contrast, 0, 0, // Blue
-                0, 0, 0, 1, 0  // Alpha
+                contrast, 0, 0, 0, 0, 
+                0, contrast, 0, 0, 0, 
+                0, 0, contrast, 0, 0, 
+                0, 0, 0, 1, 0  
             };
 
             using (var canvas = new SKCanvas(processedBitmap))
@@ -145,7 +145,6 @@ namespace OcrMaui
 
         private SKBitmap RemoveNoise(SKBitmap bitmap)
         {
-            // Exemplo básico: aplicação de um filtro de desfoque gaussiano para reduzir o ruído
             var width = bitmap.Width;
             var height = bitmap.Height;
             var processedBitmap = new SKBitmap(width, height);
@@ -154,7 +153,7 @@ namespace OcrMaui
             {
                 var paint = new SKPaint
                 {
-                    ImageFilter = SKImageFilter.CreateBlur(2.0f, 2.0f) // Ajuste o raio do desfoque conforme necessário
+                    ImageFilter = SKImageFilter.CreateBlur(2.0f, 2.0f) 
                 };
                 canvas.DrawBitmap(bitmap, 0, 0, paint);
             }
@@ -162,10 +161,12 @@ namespace OcrMaui
             return processedBitmap;
         }
         private string ExtractMeterNumber(string text)
-        {    
-            var regex = new Regex(@"\d{1,5}"); 
+        {
+            var regex = new Regex(@"\b\d{5}\b"); 
             var match = regex.Match(text);
             return match.Success ? match.Value : null;
         }
+
+
     }
 }
