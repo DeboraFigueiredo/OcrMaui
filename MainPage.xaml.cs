@@ -1,6 +1,7 @@
 ﻿using Plugin.Maui.OCR;
 using SkiaSharp;
 using System.Text.RegularExpressions;
+using static Android.Print.PrintAttributes;
 
 namespace OcrMaui
 {
@@ -20,132 +21,67 @@ namespace OcrMaui
 
         private async void OnCounterClicked(object sender, EventArgs e)
         {
-            await ProcessImageFromFile();
+            await ProcessImage(async () => await MediaPicker.Default.PickPhotoAsync());
         }
 
         private async void PictureBtn_Clicked(object sender, EventArgs e)
         {
-            await ProcessImageFromCamera();
+            await ProcessImage(async () => await MediaPicker.Default.CapturePhotoAsync());
         }
 
-        private async Task ProcessImageFromFile()
+        private async Task ProcessImage(Func<Task<MediaFile>> getMediaFile)
         {
             try
             {
-                var pickResult = await MediaPicker.Default.PickPhotoAsync();
-
+                var pickResult = await getMediaFile();
                 if (pickResult != null)
                 {
                     using var imageAsStream = await pickResult.OpenReadAsync();
-                    var ocrResult = await ProcessImageAsync(imageAsStream);
+                    var imageAsBytes = new byte[imageAsStream.Length];
+                    await imageAsStream.ReadAsync(imageAsBytes);
 
-                    await DisplayResult(ocrResult);
-                }
-            }
-            catch (Exception ex)
-            {
-                await DisplayAlert("Error", ex.Message, "OK");
-            }
-        }
+                    using var bitmap = SKBitmap.Decode(imageAsBytes);
 
-        private async Task ProcessImageFromCamera()
-        {
-            try
-            {
-                var pickResult = await MediaPicker.Default.CapturePhotoAsync();
+                    var processedBitmap = PreprocessImage(bitmap);
+                    using var processedImageStream = new SKImage.FromBitmap(processedBitmap).Encode();
+                    var processedImageBytes = processedImageStream.ToArray();
 
-                if (pickResult != null)
-                {
-                    using var imageAsStream = await pickResult.OpenReadAsync();
-                    var ocrResult = await ProcessImageAsync(imageAsStream);
+                    var ocrResult = await OcrPlugin.Default.RecognizeTextAsync(processedImageBytes);
 
-                    await DisplayResult(ocrResult);
-                }
-            }
-            catch (Exception ex)
-            {
-                await DisplayAlert("Error", ex.Message, "OK");
-            }
-        }
-
-        private async Task<string> ProcessImageAsync(Stream imageStream)
-        {
-            var bitmap = SKBitmap.Decode(imageStream);
-
-            bitmap = Resize(bitmap, bitmap.Width / 2, bitmap.Height / 2); // Reduz o tamanho da imagem para melhorar a performance
-            bitmap = SetGrayscale(bitmap); // Converte a imagem para escala de cinza
-            bitmap = RemoveNoise(bitmap); // Remove o ruído da imagem
-            bitmap = AdjustContrast(bitmap, 1.5f); // Ajusta o contraste para melhorar a legibilidade
-
-            using var image = SKImage.FromBitmap(bitmap); // Corrigido
-            using var encodedImage = image.Encode(SKEncodedImageFormat.Jpeg, 100);
-            var imageAsBytes = encodedImage.ToArray();
-
-            var ocrResult = await OcrPlugin.Default.RecognizeTextAsync(imageAsBytes);
-
-            if (ocrResult.Success)
-            {
-                return ExtractMeterNumber(ocrResult.AllText);
-            }
-
-            return null;
-        }
-
-        private async Task DisplayResult(string meterNumber)
-        {
-            if (!string.IsNullOrEmpty(meterNumber))
-            {
-                await DisplayAlert("OCR Result", $"Número do Medidor: {meterNumber}", "OK");
-            }
-            else
-            {
-                await DisplayAlert("No Success", "Número do medidor não encontrado", "OK");
-            }
-        }
-
-        private SKBitmap Resize(SKBitmap bitmap, int newWidth, int newHeight)
-        {
-            var resizedBitmap = new SKBitmap(newWidth, newHeight);
-
-            using (var canvas = new SKCanvas(resizedBitmap))
-            {
-                var paint = new SKPaint
-                {
-                    FilterQuality = SKFilterQuality.High
-                };
-
-                canvas.DrawBitmap(bitmap, SKRect.Create(bitmap.Width, bitmap.Height), SKRect.Create(newWidth, newHeight), paint);
-            }
-
-            return resizedBitmap;
-        }
-
-        private SKBitmap SetGrayscale(SKBitmap bitmap)
-        {
-            var width = bitmap.Width;
-            var height = bitmap.Height;
-            var grayBitmap = new SKBitmap(width, height);
-
-            using (var canvas = new SKCanvas(grayBitmap))
-            {
-                var paint = new SKPaint
-                {
-                    ColorFilter = SKColorFilter.CreateColorMatrix(new float[]
+                    if (ocrResult.Success)
                     {
-                        0.299f, 0.299f, 0.299f, 0, 0,
-                        0.587f, 0.587f, 0.587f, 0, 0,
-                        0.114f, 0.114f, 0.114f, 0, 0,
-                        0, 0, 0, 1, 0
-                    })
-                };
-
-                canvas.DrawBitmap(bitmap, 0, 0, paint);
+                        var meterNumber = ExtractMeterNumber(ocrResult.AllText);
+                        if (!string.IsNullOrEmpty(meterNumber))
+                        {
+                            await DisplayAlert("OCR Result", $"Número do Medidor: {meterNumber}", "OK");
+                        }
+                        else
+                        {
+                            await DisplayAlert("No Success", "Número do medidor não encontrado", "OK");
+                        }
+                    }
+                    else
+                    {
+                        await DisplayAlert("No Success", "No OCR possible", "OK");
+                    }
+                }
             }
-
-            return grayBitmap;
+            catch (Exception ex)
+            {
+                await DisplayAlert("Error", ex.Message, "OK");
+            }
         }
 
-        private SKBitmap RemoveNoise(SKBitmap bitmap)
+        private SKBitmap PreprocessImage(SKBitmap bitmap)
+        {
+            var bwBitmap = ConvertToBlackAndWhite(bitmap);
+            var highContrastBitmap = AdjustContrast(bwBitmap, 1.5f); // Ajuste de contraste
+            var denoisedBitmap = RemoveNoise(highContrastBitmap);
+
+            return denoisedBitmap;
+        }
+
+        private SKBitmap ConvertToBlackAndWhite(SKBitmap bitmap)
         {
             var width = bitmap.Width;
             var height = bitmap.Height;
@@ -155,7 +91,13 @@ namespace OcrMaui
             {
                 var paint = new SKPaint
                 {
-                    ImageFilter = SKImageFilter.CreateBlur(1.0f, 1.0f)
+                    ColorFilter = SKColorFilter.CreateColorMatrix(new float[]
+                    {
+                        0.3f, 0.3f, 0.3f, 0, 0, // Red
+                        0.3f, 0.3f, 0.3f, 0, 0, // Green
+                        0.3f, 0.3f, 0.3f, 0, 0, // Blue
+                        0, 0, 0, 1, 0  // Alpha
+                    })
                 };
                 canvas.DrawBitmap(bitmap, 0, 0, paint);
             }
@@ -169,14 +111,12 @@ namespace OcrMaui
             var height = bitmap.Height;
             var processedBitmap = new SKBitmap(width, height);
 
-            float translation = (1 - contrast) * 128;
-
             var contrastMatrix = new float[]
             {
-                contrast, 0, 0, 0, translation,
-                0, contrast, 0, 0, translation,
-                0, 0, contrast, 0, translation,
-                0, 0, 0, 1, 0
+                contrast, 0, 0, 0, 0, // Red
+                0, contrast, 0, 0, 0, // Green
+                0, 0, contrast, 0, 0, // Blue
+                0, 0, 0, 1, 0  // Alpha
             };
 
             using (var canvas = new SKCanvas(processedBitmap))
@@ -191,9 +131,27 @@ namespace OcrMaui
             return processedBitmap;
         }
 
+        private SKBitmap RemoveNoise(SKBitmap bitmap)
+        {
+            var width = bitmap.Width;
+            var height = bitmap.Height;
+            var processedBitmap = new SKBitmap(width, height);
+
+            using (var canvas = new SKCanvas(processedBitmap))
+            {
+                var paint = new SKPaint
+                {
+                    ImageFilter = SKImageFilter.CreateBlur(1.0f, 1.0f) // Reduzido para não borrar demais
+                };
+                canvas.DrawBitmap(bitmap, 0, 0, paint);
+            }
+
+            return processedBitmap;
+        }
+
         private string ExtractMeterNumber(string text)
         {
-            var regex = new Regex(@"\b\d{5,10}\b");
+            var regex = new Regex(@"\d{1,5}");
             var match = regex.Match(text);
             return match.Success ? match.Value : null;
         }
