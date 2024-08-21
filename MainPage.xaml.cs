@@ -72,12 +72,14 @@ namespace OcrMaui
         {
             var bitmap = SKBitmap.Decode(imageStream);
 
-            bitmap = RemoveNoise(bitmap);
-            bitmap = AdjustContrast(bitmap, 1.5f);
-            bitmap = ConvertToBlackAndWhite(bitmap);
+            bitmap = Resize(bitmap, bitmap.Width / 2, bitmap.Height / 2); // Reduz o tamanho da imagem para melhorar a performance
+            bitmap = SetGrayscale(bitmap); // Converte a imagem para escala de cinza
+            bitmap = RemoveNoise(bitmap); // Remove o ruído da imagem
+            bitmap = AdjustContrast(bitmap, 1.5f); // Ajusta o contraste para melhorar a legibilidade
 
-            using var image = bitmap.Encode(SKEncodedImageFormat.Jpeg, 100);
-            var imageAsBytes = image.ToArray();
+            using var image = SKImage.FromBitmap(bitmap); // Corrigido
+            using var encodedImage = image.Encode(SKEncodedImageFormat.Jpeg, 100);
+            var imageAsBytes = encodedImage.ToArray();
 
             var ocrResult = await OcrPlugin.Default.RecognizeTextAsync(imageAsBytes);
 
@@ -101,7 +103,49 @@ namespace OcrMaui
             }
         }
 
-        private SKBitmap ConvertToBlackAndWhite(SKBitmap bitmap)
+        private SKBitmap Resize(SKBitmap bitmap, int newWidth, int newHeight)
+        {
+            var resizedBitmap = new SKBitmap(newWidth, newHeight);
+
+            using (var canvas = new SKCanvas(resizedBitmap))
+            {
+                var paint = new SKPaint
+                {
+                    FilterQuality = SKFilterQuality.High
+                };
+
+                canvas.DrawBitmap(bitmap, SKRect.Create(bitmap.Width, bitmap.Height), SKRect.Create(newWidth, newHeight), paint);
+            }
+
+            return resizedBitmap;
+        }
+
+        private SKBitmap SetGrayscale(SKBitmap bitmap)
+        {
+            var width = bitmap.Width;
+            var height = bitmap.Height;
+            var grayBitmap = new SKBitmap(width, height);
+
+            using (var canvas = new SKCanvas(grayBitmap))
+            {
+                var paint = new SKPaint
+                {
+                    ColorFilter = SKColorFilter.CreateColorMatrix(new float[]
+                    {
+                        0.299f, 0.299f, 0.299f, 0, 0,
+                        0.587f, 0.587f, 0.587f, 0, 0,
+                        0.114f, 0.114f, 0.114f, 0, 0,
+                        0, 0, 0, 1, 0
+                    })
+                };
+
+                canvas.DrawBitmap(bitmap, 0, 0, paint);
+            }
+
+            return grayBitmap;
+        }
+
+        private SKBitmap RemoveNoise(SKBitmap bitmap)
         {
             var width = bitmap.Width;
             var height = bitmap.Height;
@@ -111,13 +155,7 @@ namespace OcrMaui
             {
                 var paint = new SKPaint
                 {
-                    ColorFilter = SKColorFilter.CreateColorMatrix(new float[]
-                    {
-                        0.3f, 0.3f, 0.3f, 0, 0,
-                        0.3f, 0.3f, 0.3f, 0, 0,
-                        0.3f, 0.3f, 0.3f, 0, 0,
-                        0, 0, 0, 1, 0
-                    })
+                    ImageFilter = SKImageFilter.CreateBlur(1.0f, 1.0f)
                 };
                 canvas.DrawBitmap(bitmap, 0, 0, paint);
             }
@@ -153,27 +191,9 @@ namespace OcrMaui
             return processedBitmap;
         }
 
-        private SKBitmap RemoveNoise(SKBitmap bitmap)
-        {
-            var width = bitmap.Width;
-            var height = bitmap.Height;
-            var processedBitmap = new SKBitmap(width, height);
-
-            using (var canvas = new SKCanvas(processedBitmap))
-            {
-                var paint = new SKPaint
-                {
-                    ImageFilter = SKImageFilter.CreateBlur(1.0f, 1.0f)
-                };
-                canvas.DrawBitmap(bitmap, 0, 0, paint);
-            }
-
-            return processedBitmap;
-        }
-
         private string ExtractMeterNumber(string text)
         {
-            var regex = new Regex(@"\b\d{5}\b"); 
+            var regex = new Regex(@"\b\d{5,10}\b");
             var match = regex.Match(text);
             return match.Success ? match.Value : null;
         }
