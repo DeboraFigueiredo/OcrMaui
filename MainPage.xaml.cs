@@ -1,7 +1,6 @@
 ﻿using Plugin.Maui.OCR;
 using SkiaSharp;
 using System.Text.RegularExpressions;
-using static Android.Print.PrintAttributes;
 
 namespace OcrMaui
 {
@@ -21,32 +20,17 @@ namespace OcrMaui
 
         private async void OnCounterClicked(object sender, EventArgs e)
         {
-            await ProcessImage(async () => await MediaPicker.Default.PickPhotoAsync());
-        }
-
-        private async void PictureBtn_Clicked(object sender, EventArgs e)
-        {
-            await ProcessImage(async () => await MediaPicker.Default.CapturePhotoAsync());
-        }
-
-        private async Task ProcessImage(Func<Task<MediaFile>> getMediaFile)
-        {
             try
             {
-                var pickResult = await getMediaFile();
+                var pickResult = await MediaPicker.Default.PickPhotoAsync();
+
                 if (pickResult != null)
                 {
                     using var imageAsStream = await pickResult.OpenReadAsync();
                     var imageAsBytes = new byte[imageAsStream.Length];
                     await imageAsStream.ReadAsync(imageAsBytes);
 
-                    using var bitmap = SKBitmap.Decode(imageAsBytes);
-
-                    var processedBitmap = PreprocessImage(bitmap);
-                    using var processedImageStream = new SKImage.FromBitmap(processedBitmap).Encode();
-                    var processedImageBytes = processedImageStream.ToArray();
-
-                    var ocrResult = await OcrPlugin.Default.RecognizeTextAsync(processedImageBytes);
+                    var ocrResult = await OcrPlugin.Default.RecognizeTextAsync(imageAsBytes);
 
                     if (ocrResult.Success)
                     {
@@ -72,15 +56,43 @@ namespace OcrMaui
             }
         }
 
-        private SKBitmap PreprocessImage(SKBitmap bitmap)
+        private async void PictureBtn_Clicked(object sender, EventArgs e)
         {
-            var bwBitmap = ConvertToBlackAndWhite(bitmap);
-            var highContrastBitmap = AdjustContrast(bwBitmap, 1.5f); // Ajuste de contraste
-            var denoisedBitmap = RemoveNoise(highContrastBitmap);
+            try
+            {
+                var pickResult = await MediaPicker.Default.CapturePhotoAsync();
 
-            return denoisedBitmap;
+                if (pickResult != null)
+                {
+                    using var imageAsStream = await pickResult.OpenReadAsync();
+                    var imageAsBytes = new byte[imageAsStream.Length];
+                    await imageAsStream.ReadAsync(imageAsBytes);
+
+                    var ocrResult = await OcrPlugin.Default.RecognizeTextAsync(imageAsBytes);
+
+                    if (ocrResult.Success)
+                    {
+                        var meterNumber = ExtractMeterNumber(ocrResult.AllText);
+                        if (!string.IsNullOrEmpty(meterNumber))
+                        {
+                            await DisplayAlert("OCR Result", $"Número do Medidor: {meterNumber}", "OK");
+                        }
+                        else
+                        {
+                            await DisplayAlert("No Success", "Número do medidor não encontrado", "OK");
+                        }
+                    }
+                    else
+                    {
+                        await DisplayAlert("No Success", "No OCR possible", "OK");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Error", ex.Message, "OK");
+            }
         }
-
         private SKBitmap ConvertToBlackAndWhite(SKBitmap bitmap)
         {
             var width = bitmap.Width;
@@ -141,17 +153,16 @@ namespace OcrMaui
             {
                 var paint = new SKPaint
                 {
-                    ImageFilter = SKImageFilter.CreateBlur(1.0f, 1.0f) // Reduzido para não borrar demais
+                    ImageFilter = SKImageFilter.CreateBlur(2.0f, 2.0f) 
                 };
                 canvas.DrawBitmap(bitmap, 0, 0, paint);
             }
 
             return processedBitmap;
         }
-
         private string ExtractMeterNumber(string text)
-        {
-            var regex = new Regex(@"\d{1,5}");
+        {    
+            var regex = new Regex(@"\d{1,5}"); 
             var match = regex.Match(text);
             return match.Success ? match.Value : null;
         }
