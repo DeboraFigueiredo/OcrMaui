@@ -30,7 +30,7 @@ namespace OcrMaui
                     var imageAsBytes = new byte[imageAsStream.Length];
                     await imageAsStream.ReadAsync(imageAsBytes);
 
-                    var enhancedImage = EnhanceImageQuality(imageAsBytes);
+                    var enhancedImage = EnhanceImage(imageAsBytes);
 
                     var ocrResult = await OcrPlugin.Default.RecognizeTextAsync(enhancedImage);
 
@@ -70,7 +70,7 @@ namespace OcrMaui
                     var imageAsBytes = new byte[imageAsStream.Length];
                     await imageAsStream.ReadAsync(imageAsBytes);
 
-                    var enhancedImage = EnhanceImageQuality(imageAsBytes);
+                    var enhancedImage = EnhanceImage(imageAsBytes);
 
                     var ocrResult = await OcrPlugin.Default.RecognizeTextAsync(enhancedImage);
 
@@ -98,41 +98,19 @@ namespace OcrMaui
             }
         }
 
-        private SKBitmap ConvertToBlackAndWhite(SKBitmap bitmap)
+        private SKBitmap AdjustBrightnessContrast(SKBitmap bitmap, float brightness, float contrast)
         {
             var width = bitmap.Width;
             var height = bitmap.Height;
             var processedBitmap = new SKBitmap(width, height);
 
-            using (var canvas = new SKCanvas(processedBitmap))
-            {
-                var paint = new SKPaint
-                {
-                    ColorFilter = SKColorFilter.CreateColorMatrix(new float[]
-                    {
-                        0.3f, 0.3f, 0.3f, 0, 0,
-                        0.3f, 0.3f, 0.3f, 0, 0,
-                        0.3f, 0.3f, 0.3f, 0, 0,
-                        0, 0, 0, 1, 0
-                    })
-                };
-                canvas.DrawBitmap(bitmap, 0, 0, paint);
-            }
-
-            return processedBitmap;
-        }
-
-        private SKBitmap AdjustContrast(SKBitmap bitmap, float contrast)
-        {
-            var width = bitmap.Width;
-            var height = bitmap.Height;
-            var processedBitmap = new SKBitmap(width, height);
+            float t = (1.0f - contrast) / 2.0f + brightness;
 
             var contrastMatrix = new float[]
             {
-                contrast, 0, 0, 0, 0,
-                0, contrast, 0, 0, 0,
-                0, 0, contrast, 0, 0,
+                contrast, 0, 0, 0, t,
+                0, contrast, 0, 0, t,
+                0, 0, contrast, 0, t,
                 0, 0, 0, 1, 0
             };
 
@@ -148,17 +126,31 @@ namespace OcrMaui
             return processedBitmap;
         }
 
-        private SKBitmap RemoveNoise(SKBitmap bitmap)
+        private SKBitmap SharpenImage(SKBitmap bitmap)
         {
             var width = bitmap.Width;
             var height = bitmap.Height;
             var processedBitmap = new SKBitmap(width, height);
 
+            float[] kernel = {
+        -1, -1, -1,
+        -1,  9, -1,
+        -1, -1, -1
+    };
+
             using (var canvas = new SKCanvas(processedBitmap))
             {
                 var paint = new SKPaint
                 {
-                    ImageFilter = SKImageFilter.CreateBlur(2.0f, 2.0f)
+                    ImageFilter = SKImageFilter.CreateMatrixConvolution(
+                        new SKSizeI(3, 3), 
+                        kernel,              
+                        1.0f,                  
+                        0.0f,                 
+                        new SKPointI(1, 1),    
+                        SKMatrixConvolutionTileMode.Clamp,  
+                        true               
+                    )
                 };
                 canvas.DrawBitmap(bitmap, 0, 0, paint);
             }
@@ -166,23 +158,23 @@ namespace OcrMaui
             return processedBitmap;
         }
 
-        private byte[] EnhanceImageQuality(byte[] imageBytes)
+
+        private byte[] EnhanceImage(byte[] imageBytes)
         {
             using var inputStream = new SKMemoryStream(imageBytes);
             using var originalBitmap = SKBitmap.Decode(inputStream);
 
-            var bwBitmap = ConvertToBlackAndWhite(originalBitmap);
-            var contrastBitmap = AdjustContrast(bwBitmap, 2.0f);
-            var finalBitmap = RemoveNoise(contrastBitmap);
+            var adjustedBitmap = AdjustBrightnessContrast(originalBitmap, 0.1f, 1.5f);
+            var sharpenedBitmap = SharpenImage(adjustedBitmap);
 
             using var imageStream = new SKDynamicMemoryWStream();
-            finalBitmap.Encode(imageStream, SKEncodedImageFormat.Jpeg, 100);
+            sharpenedBitmap.Encode(imageStream, SKEncodedImageFormat.Jpeg, 100);
             return imageStream.DetachAsData().ToArray();
         }
 
         private string ExtractMeterNumber(string text)
         {
-            var regex = new Regex(@"\d{1,5}");
+            var regex = new Regex(@"\b\d{5,}\b"); 
             var match = regex.Match(text);
             return match.Success ? match.Value : null;
         }
