@@ -105,10 +105,10 @@ namespace OcrMaui
                 {
                     ColorFilter = SKColorFilter.CreateColorMatrix(new float[]
                     {
-                        0.3f, 0.3f, 0.3f, 0, 0, // Red
-                        0.3f, 0.3f, 0.3f, 0, 0, // Green
-                        0.3f, 0.3f, 0.3f, 0, 0, // Blue
-                        0, 0, 0, 1, 0  // Alpha
+                        0.3f, 0.3f, 0.3f, 0, 0, 
+                        0.3f, 0.3f, 0.3f, 0, 0, 
+                        0.3f, 0.3f, 0.3f, 0, 0, 
+                        0, 0, 0, 1, 0  
                     })
                 };
                 canvas.DrawBitmap(bitmap, 0, 0, paint);
@@ -125,10 +125,10 @@ namespace OcrMaui
 
             var contrastMatrix = new float[]
             {
-                contrast, 0, 0, 0, 0, // Red
-                0, contrast, 0, 0, 0, // Green
-                0, 0, contrast, 0, 0, // Blue
-                0, 0, 0, 1, 0  // Alpha
+                contrast, 0, 0, 0, 0,
+                0, contrast, 0, 0, 0, 
+                0, 0, contrast, 0, 0, 
+                0, 0, 0, 1, 0  
             };
 
             using (var canvas = new SKCanvas(processedBitmap))
