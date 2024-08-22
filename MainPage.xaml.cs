@@ -30,7 +30,9 @@ namespace OcrMaui
                     var imageAsBytes = new byte[imageAsStream.Length];
                     await imageAsStream.ReadAsync(imageAsBytes);
 
-                    var ocrResult = await OcrPlugin.Default.RecognizeTextAsync(imageAsBytes);
+                    var enhancedImage = EnhanceImageQuality(imageAsBytes);
+
+                    var ocrResult = await OcrPlugin.Default.RecognizeTextAsync(enhancedImage);
 
                     if (ocrResult.Success)
                     {
@@ -68,7 +70,9 @@ namespace OcrMaui
                     var imageAsBytes = new byte[imageAsStream.Length];
                     await imageAsStream.ReadAsync(imageAsBytes);
 
-                    var ocrResult = await OcrPlugin.Default.RecognizeTextAsync(imageAsBytes);
+                    var enhancedImage = EnhanceImageQuality(imageAsBytes);
+
+                    var ocrResult = await OcrPlugin.Default.RecognizeTextAsync(enhancedImage);
 
                     if (ocrResult.Success)
                     {
@@ -93,6 +97,7 @@ namespace OcrMaui
                 await DisplayAlert("Error", ex.Message, "OK");
             }
         }
+
         private SKBitmap ConvertToBlackAndWhite(SKBitmap bitmap)
         {
             var width = bitmap.Width;
@@ -105,10 +110,10 @@ namespace OcrMaui
                 {
                     ColorFilter = SKColorFilter.CreateColorMatrix(new float[]
                     {
-                        0.3f, 0.3f, 0.3f, 0, 0, 
-                        0.3f, 0.3f, 0.3f, 0, 0, 
-                        0.3f, 0.3f, 0.3f, 0, 0, 
-                        0, 0, 0, 1, 0  
+                        0.3f, 0.3f, 0.3f, 0, 0,
+                        0.3f, 0.3f, 0.3f, 0, 0,
+                        0.3f, 0.3f, 0.3f, 0, 0,
+                        0, 0, 0, 1, 0
                     })
                 };
                 canvas.DrawBitmap(bitmap, 0, 0, paint);
@@ -126,9 +131,9 @@ namespace OcrMaui
             var contrastMatrix = new float[]
             {
                 contrast, 0, 0, 0, 0,
-                0, contrast, 0, 0, 0, 
-                0, 0, contrast, 0, 0, 
-                0, 0, 0, 1, 0  
+                0, contrast, 0, 0, 0,
+                0, 0, contrast, 0, 0,
+                0, 0, 0, 1, 0
             };
 
             using (var canvas = new SKCanvas(processedBitmap))
@@ -153,16 +158,31 @@ namespace OcrMaui
             {
                 var paint = new SKPaint
                 {
-                    ImageFilter = SKImageFilter.CreateBlur(2.0f, 2.0f) 
+                    ImageFilter = SKImageFilter.CreateBlur(2.0f, 2.0f)
                 };
                 canvas.DrawBitmap(bitmap, 0, 0, paint);
             }
 
             return processedBitmap;
         }
+
+        private byte[] EnhanceImageQuality(byte[] imageBytes)
+        {
+            using var inputStream = new SKMemoryStream(imageBytes);
+            using var originalBitmap = SKBitmap.Decode(inputStream);
+
+            var bwBitmap = ConvertToBlackAndWhite(originalBitmap);
+            var contrastBitmap = AdjustContrast(bwBitmap, 2.0f);
+            var finalBitmap = RemoveNoise(contrastBitmap);
+
+            using var imageStream = new SKDynamicMemoryWStream();
+            finalBitmap.Encode(imageStream, SKEncodedImageFormat.Jpeg, 100);
+            return imageStream.DetachAsData().ToArray();
+        }
+
         private string ExtractMeterNumber(string text)
-        {    
-            var regex = new Regex(@"\d{1,5}"); 
+        {
+            var regex = new Regex(@"\d{1,5}");
             var match = regex.Match(text);
             return match.Success ? match.Value : null;
         }
