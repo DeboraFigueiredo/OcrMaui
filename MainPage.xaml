@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="OcrMaui.MainPage">
 
+
     <ScrollView>
         <VerticalStackLayout
             Padding="30,0"
@@ -27,17 +28,16 @@
             <Button
                 x:Name="CounterBtn"
                 Text="Pick Image" 
-                SemanticProperties.Hint=""
+                SemanticProperties.Hint="Picks an image for OCR"
                 Clicked="OnCounterClicked"
                 HorizontalOptions="Fill" />
-            
+
             <Button
-    x:Name="PictureBtn"
-    Text="Take Picture" 
-    SemanticProperties.Hint="Takes a picture for OCR"
-    Clicked="PictureBtn_Clicked"
-    HorizontalOptions="Fill" />
-            
+                x:Name="PictureBtn"
+                Text="Take Picture" 
+                SemanticProperties.Hint="Takes a picture for OCR"
+                Clicked="PictureBtn_Clicked"
+                HorizontalOptions="Fill" />
         </VerticalStackLayout>
     </ScrollView>
 
