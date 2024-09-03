@@ -26,15 +26,21 @@ namespace OcrMaui
         {
             try
             {
+                // Path to the tessdata directory in your project
                 var tessDataPath = Path.Combine(FileSystem.AppDataDirectory, "tessdata");
-                // Specify language if known (e.g., "por" for Portuguese)
+
+                // Create the TesseractEngine with your custom trained data (replace 'custom' with the language code you used)
                 _tesseractEngine = new TesseractEngine(tessDataPath, "eng", EngineMode.Default);
-                _tesseractEngine.SetVariable("tessedit_char_whitelist", "0123456789"); // Only numbers
-                _tesseractEngine.SetVariable("classify_bln_numeric_mode", "1"); // Numeric mode
+
+                // Set PSM mode (e.g., Sparse text with OSD)
+                _tesseractEngine.SetVariable("tessedit_pageseg_mode", "11");
+
+                // Set additional configurations if needed
+                _tesseractEngine.SetVariable("tessedit_char_whitelist", "0123456789"); // Example: Whitelist numbers only
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Erro ao inicializar o Tesseract: {ex.Message}");
+                Console.WriteLine($"Error initializing Tesseract: {ex.Message}");
             }
         }
 
@@ -265,6 +271,7 @@ namespace OcrMaui
             }
             catch (Exception ex)
             {
+
                 Console.WriteLine($"Erro ao realizar o OCR: {ex.Message}");
                 throw;
             }

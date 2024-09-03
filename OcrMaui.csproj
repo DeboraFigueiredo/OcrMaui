@@ -57,11 +57,470 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
-		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />
+	  <MauiAsset Remove="Resources\Raw\tessdata\medidor %281%29.tr" />
+	  <MauiAsset Remove="Resources\Raw\tessdata\medidor %2810%29.tr" />
+	  <MauiAsset Remove="Resources\Raw\tessdata\medidor %28100%29.tr" />
+	  <MauiAsset Remove="Resources\Raw\tessdata\medidor %2812%29.tr" />
+	  <MauiAsset Remove="Resources\Raw\tessdata\medidor %2813%29.tr" />
+	  <MauiAsset Remove="Resources\Raw\tessdata\medidor %2814%29.tr" />
+	  <MauiAsset Remove="Resources\Raw\tessdata\medidor %2815%29.tr" />
+	  <MauiAsset Remove="Resources\Raw\tessdata\medidor %2816%29.tr" />
+	  <MauiAsset Remove="Resources\Raw\tessdata\medidor %2817%29.tr" />
+	  <MauiAsset Remove="Resources\Raw\tessdata\medidor %2818%29.tr" />
+	  <MauiAsset Remove="Resources\Raw\tessdata\medidor %2819%29.tr" />
+	  <MauiAsset Remove="Resources\Raw\tessdata\medidor %282%29.tr" />
+	  <MauiAsset Remove="Resources\Raw\tessdata\medidor %2820%29.tr" />
+	  <MauiAsset Remove="Resources\Raw\tessdata\medidor %2822%29.tr" />
+	  <MauiAsset Remove="Resources\Raw\tessdata\medidor %2824%29.tr" />
+	  <MauiAsset Remove="Resources\Raw\tessdata\medidor %2825%29.tr" />
+	  <MauiAsset Remove="Resources\Raw\tessdata\medidor %2826%29.tr" />
+	  <MauiAsset Remove="Resources\Raw\tessdata\medidor %2827%29.tr" />
+	  <MauiAsset Remove="Resources\Raw\tessdata\medidor %2828%29.tr" />
+	  <MauiAsset Remove="Resources\Raw\tessdata\medidor %2829%29.tr" />
+	  <MauiAsset Remove="Resources\Raw\tessdata\medidor %283%29.tr" />
+	  <MauiAsset Remove="Resources\Raw\tessdata\medidor %2831%29.tr" />
+	  <MauiAsset Remove="Resources\Raw\tessdata\medidor %2832%29.tr" />
+	  <MauiAsset Remove="Resources\Raw\tessdata\medidor %2833%29.tr" />
+	  <MauiAsset Remove="Resources\Raw\tessdata\medidor %2834%29.tr" />
+	  <MauiAsset Remove="Resources\Raw\tessdata\medidor %2835%29.tr" />
+	  <MauiAsset Remove="Resources\Raw\tessdata\medidor %2836%29.tr" />
+	  <MauiAsset Remove="Resources\Raw\tessdata\medidor %2837%29.tr" />
+	  <MauiAsset Remove="Resources\Raw\tessdata\medidor %2838%29.tr" />
+	  <MauiAsset Remove="Resources\Raw\tessdata\medidor %2839%29.tr" />
+	  <MauiAsset Remove="Resources\Raw\tessdata\medidor %284%29.tr" />
+	  <MauiAsset Remove="Resources\Raw\tessdata\medidor %2840%29.tr" />
+	  <MauiAsset Remove="Resources\Raw\tessdata\medidor %2841%29.tr" />
+	  <MauiAsset Remove="Resources\Raw\tessdata\medidor %2842%29.tr" />
+	  <MauiAsset Remove="Resources\Raw\tessdata\medidor %2843%29.tr" />
+	  <MauiAsset Remove="Resources\Raw\tessdata\medidor %2844%29.tr" />
+	  <MauiAsset Remove="Resources\Raw\tessdata\medidor %2845%29.tr" />
+	  <MauiAsset Remove="Resources\Raw\tessdata\medidor %2846%29.tr" />
+	  <MauiAsset Remove="Resources\Raw\tessdata\medidor %2847%29.tr" />
+	  <MauiAsset Remove="Resources\Raw\tessdata\medidor %2849%29.tr" />
+	  <MauiAsset Remove="Resources\Raw\tessdata\medidor %285%29.tr" />
+	  <MauiAsset Remove="Resources\Raw\tessdata\medidor %2850%29.tr" />
+	  <MauiAsset Remove="Resources\Raw\tessdata\medidor %2851%29.tr" />
+	  <MauiAsset Remove="Resources\Raw\tessdata\medidor %2853%29.tr" />
+	  <MauiAsset Remove="Resources\Raw\tessdata\medidor %2854%29.tr" />
+	  <MauiAsset Remove="Resources\Raw\tessdata\medidor %2855%29.tr" />
+	  <MauiAsset Remove="Resources\Raw\tessdata\medidor %2856%29.tr" />
+	  <MauiAsset Remove="Resources\Raw\tessdata\medidor %2857%29.tr" />
+	  <MauiAsset Remove="Resources\Raw\tessdata\medidor %2858%29.tr" />
+	  <MauiAsset Remove="Resources\Raw\tessdata\medidor %2859%29.tr" />
+	  <MauiAsset Remove="Resources\Raw\tessdata\medidor %286%29.tr" />
+	  <MauiAsset Remove="Resources\Raw\tessdata\medidor %2860%29.tr" />
+	  <MauiAsset Remove="Resources\Raw\tessdata\medidor %2862%29.tr" />
+	  <MauiAsset Remove="Resources\Raw\tessdata\medidor %2863%29.tr" />
+	  <MauiAsset Remove="Resources\Raw\tessdata\medidor %2864%29.tr" />
+	  <MauiAsset Remove="Resources\Raw\tessdata\medidor %2865%29.tr" />
+	  <MauiAsset Remove="Resources\Raw\tessdata\medidor %2866%29.tr" />
+	  <MauiAsset Remove="Resources\Raw\tessdata\medidor %2867%29.tr" />
+	  <MauiAsset Remove="Resources\Raw\tessdata\medidor %2868%29.tr" />
+	  <MauiAsset Remove="Resources\Raw\tessdata\medidor %2869%29.tr" />
+	  <MauiAsset Remove="Resources\Raw\tessdata\medidor %287%29.tr" />
+	  <MauiAsset Remove="Resources\Raw\tessdata\medidor %2870%29.tr" />
+	  <MauiAsset Remove="Resources\Raw\tessdata\medidor %2871%29.tr" />
+	  <MauiAsset Remove="Resources\Raw\tessdata\medidor %2872%29.tr" />
+	  <MauiAsset Remove="Resources\Raw\tessdata\medidor %2873%29.tr" />
+	  <MauiAsset Remove="Resources\Raw\tessdata\medidor %2874%29.tr" />
+	  <MauiAsset Remove="Resources\Raw\tessdata\medidor %2875%29.tr" />
+	  <MauiAsset Remove="Resources\Raw\tessdata\medidor %2876%29.tr" />
+	  <MauiAsset Remove="Resources\Raw\tessdata\medidor %2878%29.tr" />
+	  <MauiAsset Remove="Resources\Raw\tessdata\medidor %2879%29.tr" />
+	  <MauiAsset Remove="Resources\Raw\tessdata\medidor %288%29.tr" />
+	  <MauiAsset Remove="Resources\Raw\tessdata\medidor %2880%29.tr" />
+	  <MauiAsset Remove="Resources\Raw\tessdata\medidor %2882%29.tr" />
+	  <MauiAsset Remove="Resources\Raw\tessdata\medidor %2883%29.tr" />
+	  <MauiAsset Remove="Resources\Raw\tessdata\medidor %2884%29.tr" />
+	  <MauiAsset Remove="Resources\Raw\tessdata\medidor %2885%29.tr" />
+	  <MauiAsset Remove="Resources\Raw\tessdata\medidor %2886%29.tr" />
+	  <MauiAsset Remove="Resources\Raw\tessdata\medidor %2887%29.tr" />
+	  <MauiAsset Remove="Resources\Raw\tessdata\medidor %2888%29.tr" />
+	  <MauiAsset Remove="Resources\Raw\tessdata\medidor %2889%29.tr" />
+	  <MauiAsset Remove="Resources\Raw\tessdata\medidor %289%29.tr" />
+	  <MauiAsset Remove="Resources\Raw\tessdata\medidor %2890%29.tr" />
+	  <MauiAsset Remove="Resources\Raw\tessdata\medidor %2891%29.tr" />
+	  <MauiAsset Remove="Resources\Raw\tessdata\medidor %2892%29.tr" />
+	  <MauiAsset Remove="Resources\Raw\tessdata\medidor %2893%29.tr" />
+	  <MauiAsset Remove="Resources\Raw\tessdata\medidor %2894%29.tr" />
+	  <MauiAsset Remove="Resources\Raw\tessdata\medidor %2896%29.tr" />
+	  <MauiAsset Remove="Resources\Raw\tessdata\medidor %2897%29.tr" />
+	  <MauiAsset Remove="Resources\Raw\tessdata\medidor %2898%29.tr" />
+	  <MauiAsset Remove="Resources\Raw\tessdata\medidor %2899%29.tr" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Remove="Resources\Raw\tessdata\medidor (1).tr" />
+	  <None Remove="Resources\Raw\tessdata\medidor (10).tr" />
+	  <None Remove="Resources\Raw\tessdata\medidor (100).tr" />
+	  <None Remove="Resources\Raw\tessdata\medidor (12).tr" />
+	  <None Remove="Resources\Raw\tessdata\medidor (13).tr" />
+	  <None Remove="Resources\Raw\tessdata\medidor (14).tr" />
+	  <None Remove="Resources\Raw\tessdata\medidor (15).tr" />
+	  <None Remove="Resources\Raw\tessdata\medidor (16).tr" />
+	  <None Remove="Resources\Raw\tessdata\medidor (17).tr" />
+	  <None Remove="Resources\Raw\tessdata\medidor (18).tr" />
+	  <None Remove="Resources\Raw\tessdata\medidor (19).tr" />
+	  <None Remove="Resources\Raw\tessdata\medidor (2).tr" />
+	  <None Remove="Resources\Raw\tessdata\medidor (20).tr" />
+	  <None Remove="Resources\Raw\tessdata\medidor (22).tr" />
+	  <None Remove="Resources\Raw\tessdata\medidor (24).tr" />
+	  <None Remove="Resources\Raw\tessdata\medidor (25).tr" />
+	  <None Remove="Resources\Raw\tessdata\medidor (26).tr" />
+	  <None Remove="Resources\Raw\tessdata\medidor (27).tr" />
+	  <None Remove="Resources\Raw\tessdata\medidor (28).tr" />
+	  <None Remove="Resources\Raw\tessdata\medidor (29).tr" />
+	  <None Remove="Resources\Raw\tessdata\medidor (3).tr" />
+	  <None Remove="Resources\Raw\tessdata\medidor (31).tr" />
+	  <None Remove="Resources\Raw\tessdata\medidor (32).tr" />
+	  <None Remove="Resources\Raw\tessdata\medidor (33).tr" />
+	  <None Remove="Resources\Raw\tessdata\medidor (34).tr" />
+	  <None Remove="Resources\Raw\tessdata\medidor (35).tr" />
+	  <None Remove="Resources\Raw\tessdata\medidor (36).tr" />
+	  <None Remove="Resources\Raw\tessdata\medidor (37).tr" />
+	  <None Remove="Resources\Raw\tessdata\medidor (38).tr" />
+	  <None Remove="Resources\Raw\tessdata\medidor (39).tr" />
+	  <None Remove="Resources\Raw\tessdata\medidor (4).tr" />
+	  <None Remove="Resources\Raw\tessdata\medidor (40).tr" />
+	  <None Remove="Resources\Raw\tessdata\medidor (41).tr" />
+	  <None Remove="Resources\Raw\tessdata\medidor (42).tr" />
+	  <None Remove="Resources\Raw\tessdata\medidor (43).tr" />
+	  <None Remove="Resources\Raw\tessdata\medidor (44).tr" />
+	  <None Remove="Resources\Raw\tessdata\medidor (45).tr" />
+	  <None Remove="Resources\Raw\tessdata\medidor (46).tr" />
+	  <None Remove="Resources\Raw\tessdata\medidor (47).tr" />
+	  <None Remove="Resources\Raw\tessdata\medidor (49).tr" />
+	  <None Remove="Resources\Raw\tessdata\medidor (5).tr" />
+	  <None Remove="Resources\Raw\tessdata\medidor (50).tr" />
+	  <None Remove="Resources\Raw\tessdata\medidor (51).tr" />
+	  <None Remove="Resources\Raw\tessdata\medidor (53).tr" />
+	  <None Remove="Resources\Raw\tessdata\medidor (54).tr" />
+	  <None Remove="Resources\Raw\tessdata\medidor (55).tr" />
+	  <None Remove="Resources\Raw\tessdata\medidor (56).tr" />
+	  <None Remove="Resources\Raw\tessdata\medidor (57).tr" />
+	  <None Remove="Resources\Raw\tessdata\medidor (58).tr" />
+	  <None Remove="Resources\Raw\tessdata\medidor (59).tr" />
+	  <None Remove="Resources\Raw\tessdata\medidor (6).tr" />
+	  <None Remove="Resources\Raw\tessdata\medidor (60).tr" />
+	  <None Remove="Resources\Raw\tessdata\medidor (62).tr" />
+	  <None Remove="Resources\Raw\tessdata\medidor (63).tr" />
+	  <None Remove="Resources\Raw\tessdata\medidor (64).tr" />
+	  <None Remove="Resources\Raw\tessdata\medidor (65).tr" />
+	  <None Remove="Resources\Raw\tessdata\medidor (66).tr" />
+	  <None Remove="Resources\Raw\tessdata\medidor (67).tr" />
+	  <None Remove="Resources\Raw\tessdata\medidor (68).tr" />
+	  <None Remove="Resources\Raw\tessdata\medidor (69).tr" />
+	  <None Remove="Resources\Raw\tessdata\medidor (7).tr" />
+	  <None Remove="Resources\Raw\tessdata\medidor (70).tr" />
+	  <None Remove="Resources\Raw\tessdata\medidor (71).tr" />
+	  <None Remove="Resources\Raw\tessdata\medidor (72).tr" />
+	  <None Remove="Resources\Raw\tessdata\medidor (73).tr" />
+	  <None Remove="Resources\Raw\tessdata\medidor (74).tr" />
+	  <None Remove="Resources\Raw\tessdata\medidor (75).tr" />
+	  <None Remove="Resources\Raw\tessdata\medidor (76).tr" />
+	  <None Remove="Resources\Raw\tessdata\medidor (78).tr" />
+	  <None Remove="Resources\Raw\tessdata\medidor (79).tr" />
+	  <None Remove="Resources\Raw\tessdata\medidor (8).tr" />
+	  <None Remove="Resources\Raw\tessdata\medidor (80).tr" />
+	  <None Remove="Resources\Raw\tessdata\medidor (82).tr" />
+	  <None Remove="Resources\Raw\tessdata\medidor (83).tr" />
+	  <None Remove="Resources\Raw\tessdata\medidor (84).tr" />
+	  <None Remove="Resources\Raw\tessdata\medidor (85).tr" />
+	  <None Remove="Resources\Raw\tessdata\medidor (86).tr" />
+	  <None Remove="Resources\Raw\tessdata\medidor (87).tr" />
+	  <None Remove="Resources\Raw\tessdata\medidor (88).tr" />
+	  <None Remove="Resources\Raw\tessdata\medidor (89).tr" />
+	  <None Remove="Resources\Raw\tessdata\medidor (9).tr" />
+	  <None Remove="Resources\Raw\tessdata\medidor (90).tr" />
+	  <None Remove="Resources\Raw\tessdata\medidor (91).tr" />
+	  <None Remove="Resources\Raw\tessdata\medidor (92).tr" />
+	  <None Remove="Resources\Raw\tessdata\medidor (93).tr" />
+	  <None Remove="Resources\Raw\tessdata\medidor (94).tr" />
+	  <None Remove="Resources\Raw\tessdata\medidor (96).tr" />
+	  <None Remove="Resources\Raw\tessdata\medidor (97).tr" />
+	  <None Remove="Resources\Raw\tessdata\medidor (98).tr" />
+	  <None Remove="Resources\Raw\tessdata\medidor (99).tr" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Content Include="Resources\Raw\tessdata\medidor (1).tr">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Raw\tessdata\medidor (10).tr">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Raw\tessdata\medidor (100).tr">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Raw\tessdata\medidor (12).tr">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Raw\tessdata\medidor (13).tr">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Raw\tessdata\medidor (14).tr">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Raw\tessdata\medidor (15).tr">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Raw\tessdata\medidor (16).tr">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Raw\tessdata\medidor (17).tr">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Raw\tessdata\medidor (18).tr">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Raw\tessdata\medidor (19).tr">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Raw\tessdata\medidor (2).tr">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Raw\tessdata\medidor (20).tr">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Raw\tessdata\medidor (22).tr">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Raw\tessdata\medidor (24).tr">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Raw\tessdata\medidor (25).tr">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Raw\tessdata\medidor (26).tr">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Raw\tessdata\medidor (27).tr">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Raw\tessdata\medidor (28).tr">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Raw\tessdata\medidor (29).tr">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Raw\tessdata\medidor (3).tr">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Raw\tessdata\medidor (31).tr">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Raw\tessdata\medidor (32).tr">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Raw\tessdata\medidor (33).tr">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Raw\tessdata\medidor (34).tr">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Raw\tessdata\medidor (35).tr">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Raw\tessdata\medidor (36).tr">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Raw\tessdata\medidor (37).tr">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Raw\tessdata\medidor (38).tr">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Raw\tessdata\medidor (39).tr">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Raw\tessdata\medidor (4).tr">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Raw\tessdata\medidor (40).tr">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Raw\tessdata\medidor (41).tr">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Raw\tessdata\medidor (42).tr">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Raw\tessdata\medidor (43).tr">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Raw\tessdata\medidor (44).tr">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Raw\tessdata\medidor (45).tr">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Raw\tessdata\medidor (46).tr">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Raw\tessdata\medidor (47).tr">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Raw\tessdata\medidor (49).tr">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Raw\tessdata\medidor (5).tr">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Raw\tessdata\medidor (50).tr">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Raw\tessdata\medidor (51).tr">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Raw\tessdata\medidor (53).tr">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Raw\tessdata\medidor (54).tr">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Raw\tessdata\medidor (55).tr">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Raw\tessdata\medidor (56).tr">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Raw\tessdata\medidor (57).tr">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Raw\tessdata\medidor (58).tr">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Raw\tessdata\medidor (59).tr">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Raw\tessdata\medidor (6).tr">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Raw\tessdata\medidor (60).tr">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Raw\tessdata\medidor (62).tr">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Raw\tessdata\medidor (63).tr">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Raw\tessdata\medidor (64).tr">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Raw\tessdata\medidor (65).tr">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Raw\tessdata\medidor (66).tr">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Raw\tessdata\medidor (67).tr">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Raw\tessdata\medidor (68).tr">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Raw\tessdata\medidor (69).tr">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Raw\tessdata\medidor (7).tr">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Raw\tessdata\medidor (70).tr">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Raw\tessdata\medidor (71).tr">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Raw\tessdata\medidor (72).tr">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Raw\tessdata\medidor (73).tr">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Raw\tessdata\medidor (74).tr">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Raw\tessdata\medidor (75).tr">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Raw\tessdata\medidor (76).tr">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Raw\tessdata\medidor (78).tr">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Raw\tessdata\medidor (79).tr">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Raw\tessdata\medidor (8).tr">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Raw\tessdata\medidor (80).tr">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Raw\tessdata\medidor (82).tr">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Raw\tessdata\medidor (83).tr">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Raw\tessdata\medidor (84).tr">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Raw\tessdata\medidor (85).tr">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Raw\tessdata\medidor (86).tr">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Raw\tessdata\medidor (87).tr">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Raw\tessdata\medidor (88).tr">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Raw\tessdata\medidor (89).tr">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Raw\tessdata\medidor (9).tr">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Raw\tessdata\medidor (90).tr">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Raw\tessdata\medidor (91).tr">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Raw\tessdata\medidor (92).tr">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Raw\tessdata\medidor (93).tr">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Raw\tessdata\medidor (94).tr">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Raw\tessdata\medidor (96).tr">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Raw\tessdata\medidor (97).tr">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Raw\tessdata\medidor (98).tr">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	  <Content Include="Resources\Raw\tessdata\medidor (99).tr">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Maui.Controls" Version="8.0.82" />
+		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.82" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
 		<PackageReference Include="Microsoft.ML.OnnxRuntime" Version="1.19.1" />
-		<PackageReference Include="Plugin.Maui.OCR" Version="1.0.8" />
+		<PackageReference Include="Plugin.Maui.OCR" Version="1.0.12" />
 		<PackageReference Include="SkiaSharp" Version="2.88.8" />
 		<PackageReference Include="Tesseract" Version="5.2.0" />
 		<PackageReference Include="TesseractOcrMaui" Version="1.2.0" />
@@ -69,7 +528,7 @@
 
 	<ItemGroup Condition="'$(TargetFramework)' == 'net8.0-android'">
 	  <PackageReference Include="Xamarin.AndroidX.Collection.Ktx">
-	    <Version>1.4.0</Version>
+	    <Version>1.4.2.1</Version>
 	  </PackageReference>
 	</ItemGroup>
 
