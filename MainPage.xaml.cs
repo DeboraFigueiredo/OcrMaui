@@ -4,6 +4,7 @@ using System.Text.RegularExpressions;
 using Tesseract;
 using System.IO;
 using System.Linq;
+using System.Text;
 
 namespace OcrMaui
 {
@@ -32,11 +33,11 @@ namespace OcrMaui
                 // Create the TesseractEngine with your custom trained data (replace 'custom' with the language code you used)
                 _tesseractEngine = new TesseractEngine(tessDataPath, "eng", EngineMode.Default);
 
-                // Set PSM mode (e.g., Sparse text with OSD)
-                _tesseractEngine.SetVariable("tessedit_pageseg_mode", "11");
+                _tesseractEngine.SetVariable("tessedit_pageseg_mode", "6");
 
-                // Set additional configurations if needed
-                _tesseractEngine.SetVariable("tessedit_char_whitelist", "0123456789"); // Example: Whitelist numbers only
+
+                _tesseractEngine.SetVariable("tessedit_char_whitelist", "0123456789");
+
             }
             catch (Exception ex)
             {
@@ -64,18 +65,17 @@ namespace OcrMaui
                         return;
                     }
 
-                    // Extract only the 5-digit sequence
-                    var match = Regex.Match(ocrResult.AllText, @"\b\d{5}\b");
-                    string sequence;
+                    // Remova a validação de 5 dígitos
+                    var allMatches = Regex.Matches(ocrResult.AllText, @"\d+");
+                    var sequences = string.Join(", ", allMatches.Cast<Match>().Select(m => m.Value));
 
-                    if (match.Success)
+                    if (!string.IsNullOrEmpty(sequences))
                     {
-                        sequence = match.Value;
-                        await DisplayAlert("OCR Result", $"Sequência encontrada: {sequence}", "OK");
+                        await DisplayAlert("OCR Result", $"Sequências encontradas: {sequences}", "OK");
                     }
                     else
                     {
-                        await DisplayAlert("No match", "Nenhuma sequência de 5 números encontrada.", "OK");
+                        await DisplayAlert("No match", "Nenhum número encontrado.", "OK");
                     }
                 }
             }
@@ -84,7 +84,6 @@ namespace OcrMaui
                 await DisplayAlert("Error", ex.Message, "OK");
             }
         }
-
 
         private async void PictureBtn_Clicked(object sender, EventArgs e)
         {
@@ -106,18 +105,17 @@ namespace OcrMaui
                         return;
                     }
 
-                    // Extract only the 5-digit sequence
-                    var match = Regex.Match(ocrResult.AllText, @"\b\d{5}\b");
-                    string sequence;
+                    // Remova a validação de 5 dígitos
+                    var allMatches = Regex.Matches(ocrResult.AllText, @"\d+");
+                    var sequences = string.Join(", ", allMatches.Cast<Match>().Select(m => m.Value));
 
-                    if (match.Success)
+                    if (!string.IsNullOrEmpty(sequences))
                     {
-                        sequence = match.Value;
-                        await DisplayAlert("OCR Result", $"Sequência encontrada: {sequence}", "OK");
+                        await DisplayAlert("OCR Result", $"Sequências encontradas: {sequences}", "OK");
                     }
                     else
                     {
-                        await DisplayAlert("No match", "Nenhuma sequência de 5 números encontrada.", "OK");
+                        await DisplayAlert("No match", "Nenhum número encontrado.", "OK");
                     }
                 }
             }
@@ -127,44 +125,6 @@ namespace OcrMaui
             }
         }
 
-        private async Task ProcessImage(Func<Task<FileResult>> pickImageFunc)
-        {
-            try
-            {
-                var pickResult = await pickImageFunc();
-
-                if (pickResult != null)
-                {
-                    using var imageAsStream = await pickResult.OpenReadAsync();
-                    using var memoryStream = new MemoryStream();
-                    await imageAsStream.CopyToAsync(memoryStream);
-                    var imageAsBytes = memoryStream.ToArray();
-
-                    // Check if image loaded correctly
-                    if (imageAsBytes.Length == 0)
-                    {
-                        await DisplayAlert("Error", "Image could not be loaded.", "OK");
-                        return;
-                    }
-
-                    var processedImageBytes = PreprocessImage(imageAsBytes);
-                    var ocrResult = await PerformOcrAsync(processedImageBytes);
-
-                    if (!string.IsNullOrEmpty(ocrResult))
-                    {
-                        await DisplayAlert("OCR Result", $"Sequência encontrada: {ocrResult}", "OK");
-                    }
-                    else
-                    {
-                        await DisplayAlert("No match", "Nenhuma sequência de 5 números encontrada.", "OK");
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                await DisplayAlert("Error", $"An error occurred: {ex.Message}", "OK");
-            }
-        }
 
         private byte[] PreprocessImage(byte[] imageBytes)
         {
@@ -176,28 +136,43 @@ namespace OcrMaui
                     throw new Exception("Failed to decode the image.");
                 }
 
-                // Enhance image for better OCR accuracy (adjustments might be needed)
-                const int resizeFactor = 4;
-                using var resizedBitmap = new SKBitmap(inputBitmap.Width * resizeFactor, inputBitmap.Height * resizeFactor);
-                using (var canvas = new SKCanvas(resizedBitmap))
+                // Dimensões da região central a ser recortada
+                const float centralFraction = 0.6f; // Ajuste conforme necessário
+                int centerX = inputBitmap.Width / 2;
+                int centerY = inputBitmap.Height / 2;
+                int cropWidth = (int)(inputBitmap.Width * centralFraction);
+                int cropHeight = (int)(inputBitmap.Height * centralFraction);
+                int cropX = centerX - cropWidth / 2;
+                int cropY = centerY - cropHeight / 2;
+
+                // Certifique-se de que a área de recorte está dentro dos limites da imagem
+                cropX = Math.Max(0, cropX);
+                cropY = Math.Max(0, cropY);
+                cropWidth = Math.Min(cropWidth, inputBitmap.Width - cropX);
+                cropHeight = Math.Min(cropHeight, inputBitmap.Height - cropY);
+
+                // Recortar a imagem para a região central
+                using var croppedBitmap = new SKBitmap(cropWidth, cropHeight);
+                using (var canvas = new SKCanvas(croppedBitmap))
                 {
-                    canvas.DrawBitmap(inputBitmap, SKRect.Create(resizedBitmap.Width, resizedBitmap.Height));
+                    canvas.DrawBitmap(inputBitmap, new SKRect(cropX, cropY, cropX + cropWidth, cropY + cropHeight), new SKRect(0, 0, cropWidth, cropHeight));
                 }
 
-                using var grayBitmap = new SKBitmap(resizedBitmap.Width, resizedBitmap.Height, SKColorType.Gray8, SKAlphaType.Opaque);
+                // Convertendo a imagem recortada para escala de cinza
+                using var grayBitmap = new SKBitmap(croppedBitmap.Width, croppedBitmap.Height, SKColorType.Gray8, SKAlphaType.Opaque);
                 using (var canvas = new SKCanvas(grayBitmap))
                 {
                     var paint = new SKPaint
                     {
                         ColorFilter = SKColorFilter.CreateColorMatrix(new float[]
                         {
-                            0.299f, 0.587f, 0.114f, 0, 0,
-                            0.299f, 0.587f, 0.114f, 0, 0,
-                            0.299f, 0.587f, 0.114f, 0, 0,
-                            0, 0, 0, 1, 0
+                    0.299f, 0.587f, 0.114f, 0, 0,
+                    0.299f, 0.587f, 0.114f, 0, 0,
+                    0.299f, 0.587f, 0.114f, 0, 0,
+                    0, 0, 0, 1, 0
                         })
                     };
-                    canvas.DrawBitmap(resizedBitmap, 0, 0, paint);
+                    canvas.DrawBitmap(croppedBitmap, 0, 0, paint);
                 }
 
                 // Aplicar limiar adaptativo
@@ -252,29 +227,56 @@ namespace OcrMaui
         {
             try
             {
-                using var pixImage = Pix.LoadFromMemory(imageBytes);
-                using var page = _tesseractEngine.Process(pixImage);
-                var text = page.GetText().Trim();
+                using var inputBitmap = SKBitmap.Decode(imageBytes);
+                var rectangles = DetectRectangles(inputBitmap);
 
-                // Encontrar todas as sequências de 5 dígitos
-                var matches = Regex.Matches(text, @"\b\d{5}\b");
+                var resultBuilder = new StringBuilder();
 
-                if (matches.Count > 0)
+                foreach (var rect in rectangles)
                 {
-                    // Retornar todas as correspondências concatenadas em uma string
-                    return string.Join(", ", matches.Select(m => m.Value));
+                    using var croppedBitmap = new SKBitmap((int)rect.Width, (int)rect.Height);
+                    using (var canvas = new SKCanvas(croppedBitmap))
+                    {
+                        canvas.DrawBitmap(inputBitmap, rect, new SKRect(0, 0, rect.Width, rect.Height));
+                    }
+
+                    using var memoryStream = new MemoryStream();
+                    croppedBitmap.Encode(memoryStream, SKEncodedImageFormat.Png, 100);
+                    memoryStream.Seek(0, SeekOrigin.Begin);
+
+                    using var pixImage = Pix.LoadFromMemory(memoryStream.ToArray());
+                    using var page = _tesseractEngine.Process(pixImage);
+                    var text = page.GetText().Trim();
+
+                    // Adicionar o texto da área detectada ao resultado
+                    resultBuilder.Append(text);
                 }
-                else
-                {
-                    return string.Empty;
-                }
+
+                return resultBuilder.ToString();
             }
             catch (Exception ex)
             {
-
                 Console.WriteLine($"Erro ao realizar o OCR: {ex.Message}");
                 throw;
             }
         }
+
+        private List<SKRect> DetectRectangles(SKBitmap bitmap)
+        {
+            var rectangles = new List<SKRect>();
+
+            // Aqui você precisa implementar a lógica para detectar retângulos.
+            // O código abaixo é um exemplo simplificado e pode precisar ser adaptado
+            // para a sua aplicação.
+
+            // Para simplificação, vamos supor que os retângulos são detectados
+            // manualmente ou com algum outro algoritmo.
+
+            // Exemplo de retângulos fictícios:
+            rectangles.Add(new SKRect(50, 50, 200, 100)); // Um retângulo de exemplo
+
+            return rectangles;
+        }
+
     }
 }
