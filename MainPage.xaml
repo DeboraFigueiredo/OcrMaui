@@ -1,7 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:syncfusion="clr-namespace:Syncfusion.Maui.ImageEditor;assembly=Syncfusion.Maui.ImageEditor"
              x:Class="OcrMaui.MainPage"
              xmlns:imageEditor="clr-namespace:Syncfusion.Maui.ImageEditor;assembly=Syncfusion.Maui.ImageEditor"
              BackgroundColor="Black">
@@ -16,9 +15,8 @@
                 TextColor="White"
                 Style="{StaticResource Headline}"
                 SemanticProperties.HeadingLevel="Level1" />
-            <Grid>
-                <syncfusion:SfImageEditor x:Name="imageEditor" IsVisible="False"/> 
-                <Button
+
+            <Button
                 x:Name="CounterBtn"
                 Text="Pick Image" 
                 SemanticProperties.Hint="Picks an image for OCR"
@@ -33,11 +31,11 @@
                 HorizontalOptions="Fill" />
 
             <Grid>
-                <imageEditor:SfImageEditor HeightRequest="500" x:Name="imageEditor" ImageSaving="OnImageSaving"/>
+                <imageEditor:SfImageEditor HeightRequest="500" x:Name="imageEditor"/>
             </Grid>
         </VerticalStackLayout>
     </ScrollView>
 
-    
+
 
 </ContentPage>
