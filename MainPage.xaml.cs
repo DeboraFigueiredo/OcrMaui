@@ -1,6 +1,7 @@
 ﻿using Plugin.Maui.OCR;
 using SkiaSharp;
 using System.Text.RegularExpressions;
+using Syncfusion.Maui.ImageEditor;
 using Tesseract;
 using System.Text;
 using System.Runtime.Intrinsics.X86;
@@ -43,40 +44,24 @@ namespace OcrMaui
             }
         }
 
-
-
         private async void OnCounterClicked(object sender, EventArgs e)
+        {
+            await LoadImageFromDevice();
+        }
+
+        private async void PictureBtn_Clicked(object sender, EventArgs e)
+        {
+            await CaptureImageFromCamera();
+        }
+
+        private async Task LoadImageFromDevice()
         {
             try
             {
                 var pickResult = await MediaPicker.Default.PickPhotoAsync();
-
                 if (pickResult != null)
                 {
-                    using var imageAsStream = await pickResult.OpenReadAsync();
-                    var imageAsBytes = new byte[imageAsStream.Length];
-                    await imageAsStream.ReadAsync(imageAsBytes);
-
-                    var ocrResult = await OcrPlugin.Default.RecognizeTextAsync(imageAsBytes);
-
-                    if (!ocrResult.Success)
-                    {
-                        await DisplayAlert("No Success", "No OCR possible", "OK");
-                        return;
-                    }
-
-                    var allMatches = Regex.Matches(ocrResult.AllText, @"\d+");
-                    var sequences = string.Concat(allMatches.Cast<Match>().Select(m => m.Value));
-
-
-                    if (!string.IsNullOrEmpty(sequences))
-                    {
-                        await DisplayAlert("OCR Result", $"Sequências encontradas: {sequences}", "OK");
-                    }
-                    else
-                    {
-                        await DisplayAlert("No match", "Nenhum número encontrado.", "OK");
-                    }
+                    await LoadImageToEditor(pickResult);
                 }
             }
             catch (Exception ex)
@@ -84,69 +69,39 @@ namespace OcrMaui
                 await DisplayAlert("Error", ex.Message, "OK");
             }
         }
-        private byte[] EnhanceContrast(byte[] imageBytes)
+
+        private async Task CaptureImageFromCamera()
         {
-            using var inputBitmap = SKBitmap.Decode(imageBytes);
-            if (inputBitmap == null) throw new Exception("Erro ao carregar imagem.");
-
-            using var contrastBitmap = new SKBitmap(inputBitmap.Width, inputBitmap.Height);
-            using (var canvas = new SKCanvas(contrastBitmap))
+            try
             {
-                var paint = new SKPaint
+                var pickResult = await MediaPicker.Default.CapturePhotoAsync();
+                if (pickResult != null)
                 {
-                    ColorFilter = SKColorFilter.CreateHighContrast(true, SKHighContrastConfigInvertStyle.NoInvert, 1.5f)
-                };
-                canvas.DrawBitmap(inputBitmap, 0, 0, paint);
-            }
-
-            using var outputStream = new MemoryStream();
-            contrastBitmap.Encode(outputStream, SKEncodedImageFormat.Png, 100);
-            return outputStream.ToArray();
-        }
-        private SKBitmap ApplyDenoising(SKBitmap inputBitmap)
-        {
-            using var blurredBitmap = new SKBitmap(inputBitmap.Width, inputBitmap.Height);
-            using (var canvas = new SKCanvas(blurredBitmap))
-            {
-                var paint = new SKPaint
-                {
-                    ImageFilter = SKImageFilter.CreateBlur(2f, 2f) // Ajustar os valores de desfoque conforme necessário
-                };
-                canvas.DrawBitmap(inputBitmap, 0, 0, paint);
-            }
-
-            return blurredBitmap;
-        }
-        private SKBitmap ApplyThreshold(SKBitmap inputBitmap, byte threshold = 128)
-        {
-            var binaryBitmap = new SKBitmap(inputBitmap.Width, inputBitmap.Height);
-
-            for (int y = 0; y < inputBitmap.Height; y++)
-            {
-                for (int x = 0; x < inputBitmap.Width; x++)
-                {
-                    var color = inputBitmap.GetPixel(x, y);
-                    var gray = color.Red; // Como a imagem já está em escala de cinza
-                    var binColor = gray > threshold ? (byte)255 : (byte)0;
-                    binaryBitmap.SetPixel(x, y, new SKColor(binColor, binColor, binColor));
+                    await LoadImageToEditor(pickResult);
                 }
             }
-
-            return binaryBitmap;
+            catch (Exception ex)
+            {
+                await DisplayAlert("Error", ex.Message, "OK");
+            }
         }
 
-        private SKBitmap RemoveNoise(SKBitmap inputBitmap)
+        private async Task LoadImageToEditor(FileResult pickResult)
         {
-            using var blurredBitmap = new SKBitmap(inputBitmap.Width, inputBitmap.Height);
-            using (var canvas = new SKCanvas(blurredBitmap))
+            try
             {
-                var paint = new SKPaint
-                {
-                    ImageFilter = SKImageFilter.CreateBlur(1f, 1f) // Aplicando suavização leve
-                };
-                canvas.DrawBitmap(inputBitmap, 0, 0, paint);
+                using var imageAsStream = await pickResult.OpenReadAsync();
+                var imageAsBytes = new byte[imageAsStream.Length];
+                await imageAsStream.ReadAsync(imageAsBytes);
+
+                var memoryStream = new MemoryStream(imageAsBytes);
+                imageEditor.Source = ImageSource.FromStream(() => memoryStream);
+                imageEditor.IsVisible = true; // Exibe o editor para recorte
             }
-            return blurredBitmap;
+            catch (Exception ex)
+            {
+                await DisplayAlert("Error", ex.Message, "OK");
+            }
         }
 
         private async Task<byte[]> ConvertStreamToByteArray(Stream stream)
@@ -165,13 +120,10 @@ namespace OcrMaui
         {
             try
             {
-                var pickResult = await MediaPicker.Default.CapturePhotoAsync();
-
-                if (pickResult != null)
-                {
-                    using var imageAsStream = await pickResult.OpenReadAsync();
-                    var imageAsBytes = new byte[imageAsStream.Length];
-                    await imageAsStream.ReadAsync(imageAsBytes);
+                // Salva a imagem recortada e executa o OCR
+                using var memoryStream = new MemoryStream();
+                e.ImageStream.CopyTo(memoryStream);
+                var croppedImageBytes = memoryStream.ToArray();
 
                     imageEditor.Source = ImageSource.FromStream(() => new MemoryStream(imageAsBytes));
 

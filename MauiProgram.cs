@@ -13,6 +13,7 @@ namespace OcrMaui
                 .UseMauiApp<App>()
                 .ConfigureSyncfusionCore()
                 .UseOcr()
+                .ConfigureSyncfusionCore()
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
