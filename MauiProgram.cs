@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using Plugin.Maui.OCR;
+using Syncfusion.Maui.Core.Hosting;
 
 namespace OcrMaui
 {
@@ -10,6 +11,7 @@ namespace OcrMaui
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()
+                .ConfigureSyncfusionCore()
                 .UseOcr()
                 .ConfigureFonts(fonts =>
                 {

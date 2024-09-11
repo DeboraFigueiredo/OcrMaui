@@ -4,16 +4,19 @@ using System.Text.RegularExpressions;
 using Tesseract;
 using System.Text;
 using System.Runtime.Intrinsics.X86;
+using Syncfusion.Maui.ImageEditor;
 
 namespace OcrMaui
 {
     public partial class MainPage : ContentPage
     {
         private TesseractEngine _tesseractEngine;
-
+        private MemoryStream _editedImageStream;
+        private byte[] _editedImageBytes;
         public MainPage()
         {
             InitializeComponent();
+            imageEditor.ImageSaving += OnImageSaving;
         }
 
         protected override void OnAppearing()
@@ -146,6 +149,18 @@ namespace OcrMaui
             return blurredBitmap;
         }
 
+        private async Task<byte[]> ConvertStreamToByteArray(Stream stream)
+        {
+            using var memoryStream = new MemoryStream();
+            await stream.CopyToAsync(memoryStream);
+            return memoryStream.ToArray();
+        }
+
+        private async void OnImageSaving(object sender, ImageSavingEventArgs args)
+        {
+            _editedImageBytes = await ConvertStreamToByteArray(args.ImageStream);
+        }
+
         private async void PictureBtn_Clicked(object sender, EventArgs e)
         {
             try
@@ -158,25 +173,53 @@ namespace OcrMaui
                     var imageAsBytes = new byte[imageAsStream.Length];
                     await imageAsStream.ReadAsync(imageAsBytes);
 
-                    var ocrResult = await OcrPlugin.Default.RecognizeTextAsync(imageAsBytes);
+                    imageEditor.Source = ImageSource.FromStream(() => new MemoryStream(imageAsBytes));
 
-                    if (!ocrResult.Success)
+                    // Wait until the image has been processed
+                    bool isImageProcessed = false;
+
+                    void OnImageSaved(object s, ImageSavingEventArgs args)
                     {
-                        await DisplayAlert("No Success", "No OCR possible", "OK");
-                        return;
+                        _editedImageBytes = ConvertStreamToByteArray(args.ImageStream).GetAwaiter().GetResult();
+                        isImageProcessed = true;
                     }
 
-                    var allMatches = Regex.Matches(ocrResult.AllText, @"\d+");
-                    var sequences = string.Join(", ", allMatches.Cast<Match>().Select(m => m.Value));
+                    imageEditor.ImageSaving += OnImageSaved;
 
-                    if (!string.IsNullOrEmpty(sequences))
+                    // Poll for the completion of image processing
+                    while (!isImageProcessed)
                     {
-                        await DisplayAlert("OCR Result", $"Sequências encontradas: {sequences}", "OK");
+                        await Task.Delay(100); // Check every 100 ms
+                    }
+
+                    if (_editedImageBytes != null)
+                    {
+                        var ocrResult = await OcrPlugin.Default.RecognizeTextAsync(_editedImageBytes);
+
+                        if (!ocrResult.Success)
+                        {
+                            await DisplayAlert("No Success", "No OCR possible", "OK");
+                            return;
+                        }
+
+                        var allMatches = Regex.Matches(ocrResult.AllText, @"\d+");
+                        var sequences = string.Join(", ", allMatches.Cast<Match>().Select(m => m.Value));
+
+                        if (!string.IsNullOrEmpty(sequences))
+                        {
+                            await DisplayAlert("OCR Result", $"Sequências encontradas: {sequences}", "OK");
+                        }
+                        else
+                        {
+                            await DisplayAlert("No match", "Nenhum número encontrado.", "OK");
+                        }
                     }
                     else
                     {
-                        await DisplayAlert("No match", "Nenhum número encontrado.", "OK");
+                        await DisplayAlert("Error", "Edited image bytes are null.", "OK");
                     }
+
+                    imageEditor.ImageSaving -= OnImageSaved; // Clean up the event handler
                 }
             }
             catch (Exception ex)
@@ -184,6 +227,8 @@ namespace OcrMaui
                 await DisplayAlert("Error", ex.Message, "OK");
             }
         }
+
+
 
 
         private byte[] PreprocessImage(byte[] imageBytes)
@@ -196,63 +241,31 @@ namespace OcrMaui
                     throw new Exception("Failed to decode the image.");
                 }
 
-                const float centralFraction = 0.6f; // Ajuste conforme necessário
-                int centerX = inputBitmap.Width / 2;
-                int centerY = inputBitmap.Height / 2;
-                int cropWidth = (int)(inputBitmap.Width * centralFraction);
-                int cropHeight = (int)(inputBitmap.Height * centralFraction);
-                int cropX = centerX - cropWidth / 2;
-                int cropY = centerY - cropHeight / 2;
+                // Define your designated area here (example values)
+                int cropX = 100; // X-coordinate of the designated area
+                int cropY = 100; // Y-coordinate of the designated area
+                int cropWidth = 300; // Width of the designated area
+                int cropHeight = 300; // Height of the designated area
 
+                // Ensure cropping doesn't exceed the image dimensions
                 cropX = Math.Max(0, cropX);
                 cropY = Math.Max(0, cropY);
                 cropWidth = Math.Min(cropWidth, inputBitmap.Width - cropX);
                 cropHeight = Math.Min(cropHeight, inputBitmap.Height - cropY);
 
-                // Recortar a imagem para a região central
                 using var croppedBitmap = new SKBitmap(cropWidth, cropHeight);
                 using (var canvas = new SKCanvas(croppedBitmap))
                 {
                     canvas.DrawBitmap(inputBitmap, new SKRect(cropX, cropY, cropX + cropWidth, cropY + cropHeight), new SKRect(0, 0, cropWidth, cropHeight));
                 }
 
-                // Convertendo a imagem recortada para escala de cinza
-                using var grayBitmap = new SKBitmap(croppedBitmap.Width, croppedBitmap.Height, SKColorType.Gray8, SKAlphaType.Opaque);
-                using (var canvas = new SKCanvas(grayBitmap))
-                {
-                    var paint = new SKPaint
-                    {
-                        ColorFilter = SKColorFilter.CreateColorMatrix(new float[]
-                        {
-                    0.299f, 0.587f, 0.114f, 0, 0,
-                    0.299f, 0.587f, 0.114f, 0, 0,
-                    0.299f, 0.587f, 0.114f, 0, 0,
-                    0, 0, 0, 1, 0
-                        })
-                    };
-                    canvas.DrawBitmap(croppedBitmap, 0, 0, paint);
-                }
-
-                // Aplicar limiar adaptativo
-                using var binaryBitmap = grayBitmap.Copy();
-                for (int y = 0; y < grayBitmap.Height; y++)
-                {
-                    for (int x = 0; x < grayBitmap.Width; x++)
-                    {
-                        var color = grayBitmap.GetPixel(x, y);
-                        var threshold = CalculateAdaptiveThreshold(grayBitmap, x, y);
-                        var binColor = color.Red > threshold ? (byte)255 : (byte)0;
-                        binaryBitmap.SetPixel(x, y, new SKColor(binColor, binColor, binColor));
-                    }
-                }
-
                 using var outputStream = new MemoryStream();
-                binaryBitmap.Encode(outputStream, SKEncodedImageFormat.Png, 100);
+                croppedBitmap.Encode(outputStream, SKEncodedImageFormat.Png, 100);
                 return outputStream.ToArray();
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Erro ao processar a imagem: {ex.Message}");
+                Console.WriteLine($"Error while cropping image: {ex.Message}");
                 throw;
             }
         }
