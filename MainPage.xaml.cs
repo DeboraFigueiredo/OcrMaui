@@ -3,7 +3,6 @@ using SkiaSharp;
 using System.Text.RegularExpressions;
 using Tesseract;
 using System.Text;
-using System.Runtime.Intrinsics.X86;
 using Syncfusion.Maui.ImageEditor;
 
 namespace OcrMaui
@@ -70,7 +69,7 @@ namespace OcrMaui
             {
                 var paint = new SKPaint
                 {
-                    ImageFilter = SKImageFilter.CreateBlur(2f, 2f) // Ajustar os valores de desfoque conforme necessário
+                    ImageFilter = SKImageFilter.CreateBlur(2f, 2f) 
                 };
                 canvas.DrawBitmap(inputBitmap, 0, 0, paint);
             }
@@ -86,7 +85,7 @@ namespace OcrMaui
                 for (int x = 0; x < inputBitmap.Width; x++)
                 {
                     var color = inputBitmap.GetPixel(x, y);
-                    var gray = color.Red; // Como a imagem já está em escala de cinza
+                    var gray = color.Red;
                     var binColor = gray > threshold ? (byte)255 : (byte)0;
                     binaryBitmap.SetPixel(x, y, new SKColor(binColor, binColor, binColor));
                 }
@@ -102,7 +101,7 @@ namespace OcrMaui
             {
                 var paint = new SKPaint
                 {
-                    ImageFilter = SKImageFilter.CreateBlur(1f, 1f) // Aplicando suavização leve
+                    ImageFilter = SKImageFilter.CreateBlur(1f, 1f) 
                 };
                 canvas.DrawBitmap(inputBitmap, 0, 0, paint);
             }
@@ -171,8 +170,6 @@ namespace OcrMaui
         }
 
 
-
-
         private byte[] PreprocessImage(byte[] imageBytes)
         {
             try
@@ -183,13 +180,11 @@ namespace OcrMaui
                     throw new Exception("Failed to decode the image.");
                 }
 
-                // Define your designated area here (example values)
-                int cropX = 100; // X-coordinate of the designated area
-                int cropY = 100; // Y-coordinate of the designated area
-                int cropWidth = 300; // Width of the designated area
-                int cropHeight = 300; // Height of the designated area
+                int cropX = 100;
+                int cropY = 100; 
+                int cropWidth = 300;
+                int cropHeight = 300; 
 
-                // Ensure cropping doesn't exceed the image dimensions
                 cropX = Math.Max(0, cropX);
                 cropY = Math.Max(0, cropY);
                 cropWidth = Math.Min(cropWidth, inputBitmap.Width - cropX);
