@@ -44,46 +44,6 @@ namespace OcrMaui
         }
 
 
-
-        private async void OnCounterClicked(object sender, EventArgs e)
-        {
-            try
-            {
-                var pickResult = await MediaPicker.Default.PickPhotoAsync();
-
-                if (pickResult != null)
-                {
-                    using var imageAsStream = await pickResult.OpenReadAsync();
-                    var imageAsBytes = new byte[imageAsStream.Length];
-                    await imageAsStream.ReadAsync(imageAsBytes);
-
-                    var ocrResult = await OcrPlugin.Default.RecognizeTextAsync(imageAsBytes);
-
-                    if (!ocrResult.Success)
-                    {
-                        await DisplayAlert("No Success", "No OCR possible", "OK");
-                        return;
-                    }
-
-                    var allMatches = Regex.Matches(ocrResult.AllText, @"\d+");
-                    var sequences = string.Concat(allMatches.Cast<Match>().Select(m => m.Value));
-
-
-                    if (!string.IsNullOrEmpty(sequences))
-                    {
-                        await DisplayAlert("OCR Result", $"Sequências encontradas: {sequences}", "OK");
-                    }
-                    else
-                    {
-                        await DisplayAlert("No match", "Nenhum número encontrado.", "OK");
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                await DisplayAlert("Error", ex.Message, "OK");
-            }
-        }
         private byte[] EnhanceContrast(byte[] imageBytes)
         {
             using var inputBitmap = SKBitmap.Decode(imageBytes);

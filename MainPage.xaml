@@ -17,13 +17,6 @@
                 SemanticProperties.HeadingLevel="Level1" />
 
             <Button
-                x:Name="CounterBtn"
-                Text="Pick Image" 
-                SemanticProperties.Hint="Picks an image for OCR"
-                Clicked="OnCounterClicked"
-                HorizontalOptions="Fill" />
-
-            <Button
                 x:Name="PictureBtn"
                 Text="Take Picture" 
                 SemanticProperties.Hint="Takes a picture for OCR"
