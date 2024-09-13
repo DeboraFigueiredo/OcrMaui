@@ -159,6 +159,33 @@ namespace OcrMaui
         private async void OnImageSaving(object sender, ImageSavingEventArgs args)
         {
             _editedImageBytes = await ConvertStreamToByteArray(args.ImageStream);
+
+            if (_editedImageBytes != null)
+            {
+                var ocrResult = await OcrPlugin.Default.RecognizeTextAsync(_editedImageBytes);
+
+                if (!ocrResult.Success)
+                {
+                    await DisplayAlert("No Success", "No OCR possible", "OK");
+                    return;
+                }
+
+                var allMatches = Regex.Matches(ocrResult.AllText, @"\d+");
+                var sequences = string.Join(", ", allMatches.Cast<Match>().Select(m => m.Value));
+
+                if (!string.IsNullOrEmpty(sequences))
+                {
+                    await DisplayAlert("OCR Result", $"Sequências encontradas: {sequences}", "OK");
+                }
+                else
+                {
+                    await DisplayAlert("No match", "Nenhum número encontrado.", "OK");
+                }
+            }
+            else
+            {
+                await DisplayAlert("Error", "Edited image bytes are null.", "OK");
+            }
         }
 
         private async void PictureBtn_Clicked(object sender, EventArgs e)
@@ -175,51 +202,6 @@ namespace OcrMaui
 
                     imageEditor.Source = ImageSource.FromStream(() => new MemoryStream(imageAsBytes));
 
-                    // Wait until the image has been processed
-                    bool isImageProcessed = false;
-
-                    void OnImageSaved(object s, ImageSavingEventArgs args)
-                    {
-                        _editedImageBytes = ConvertStreamToByteArray(args.ImageStream).GetAwaiter().GetResult();
-                        isImageProcessed = true;
-                    }
-
-                    imageEditor.ImageSaving += OnImageSaved;
-
-                    // Poll for the completion of image processing
-                    while (!isImageProcessed)
-                    {
-                        await Task.Delay(100); // Check every 100 ms
-                    }
-
-                    if (_editedImageBytes != null)
-                    {
-                        var ocrResult = await OcrPlugin.Default.RecognizeTextAsync(_editedImageBytes);
-
-                        if (!ocrResult.Success)
-                        {
-                            await DisplayAlert("No Success", "No OCR possible", "OK");
-                            return;
-                        }
-
-                        var allMatches = Regex.Matches(ocrResult.AllText, @"\d+");
-                        var sequences = string.Join(", ", allMatches.Cast<Match>().Select(m => m.Value));
-
-                        if (!string.IsNullOrEmpty(sequences))
-                        {
-                            await DisplayAlert("OCR Result", $"Sequências encontradas: {sequences}", "OK");
-                        }
-                        else
-                        {
-                            await DisplayAlert("No match", "Nenhum número encontrado.", "OK");
-                        }
-                    }
-                    else
-                    {
-                        await DisplayAlert("Error", "Edited image bytes are null.", "OK");
-                    }
-
-                    imageEditor.ImageSaving -= OnImageSaved; // Clean up the event handler
                 }
             }
             catch (Exception ex)
